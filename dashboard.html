@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Zimple Travel Group</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#117372'
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-gray-200">
+    <!-- Navigation -->
+    <nav class="border-b border-primary/20 bg-primary sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="index.html">
+                            <img src="public/images/zimple-logo.png" alt="Zimple Travel Group" class="h-10 w-auto brightness-0 invert">
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="index.html" class="text-white hover:text-yellow-200 px-3 py-2 text-sm font-medium transition-colors">
+                            <i class="fas fa-home mr-1"></i>Home
+                        </a>
+                        <a href="index.html#services" class="text-white hover:text-yellow-200 px-3 py-2 text-sm font-medium transition-colors">Services</a>
+                        <a href="partners.html" class="text-white hover:text-yellow-200 px-3 py-2 text-sm font-medium transition-colors">Partners</a>
+                        <a href="index.html#benefits" class="text-white hover:text-yellow-200 px-3 py-2 text-sm font-medium transition-colors">Benefits</a>
+                        <a href="index.html#contact" class="text-white hover:text-yellow-200 px-3 py-2 text-sm font-medium transition-colors">Contact</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative group">
+                        <a href="reports/index.html" class="text-white hover:text-yellow-200 px-3 py-2 text-sm font-medium transition-colors inline-flex items-center">Reports
+                            <svg class="ml-1 h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        </a>
+                        <div class="absolute right-0 top-full z-50 hidden group-hover:flex flex-col bg-white text-gray-800 rounded-md shadow-lg min-w-[220px] py-1 pointer-events-auto">
+                            <a href="reports/index.html" class="block px-4 py-2 hover:bg-gray-100 text-sm">Reports Home</a>
+                            <a href="dashboard_booking.php" class="block px-4 py-2 hover:bg-gray-100 text-sm">Booking Dashboard</a>
+                            <a href="reports/reservations.html" class="block px-4 py-2 hover:bg-gray-100 text-sm">Reservations</a>
+                            <a href="reports/import_xlsx.php" class="block px-4 py-2 hover:bg-gray-100 text-sm">Import XLSX</a>
+                            <a href="reports/import_csv.php" class="block px-4 py-2 hover:bg-gray-100 text-sm">Import CSV</a>
+                            <div class="border-t my-1"></div>
+                            <a href="admin/partners/index.html" class="block px-4 py-2 hover:bg-gray-100 text-sm">Admin Partners</a>
+                            <a href="admin/clients/index.html" class="block px-4 py-2 hover:bg-gray-100 text-sm">Admin Clients</a>
+                        </div>
+                    </div>
+                    <span id="userGreeting" class="text-white text-sm"></span>
+                    <button id="logoutBtn" class="border border-white text-white hover:bg-white hover:text-primary bg-transparent px-4 py-2 rounded-md text-sm font-medium transition-colors">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <section class="py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Welcome to Your Dashboard</h1>
+                <p class="text-gray-600">Manage your Zimple Travel Group account and view your activity</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-primary/10">
+                            <i class="fas fa-calendar-check text-primary text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Total Bookings</p>
+                            <p id="totalBookings" class="text-2xl font-semibold text-gray-900">-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-green-100">
+                            <i class="fas fa-dollar-sign text-green-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Total Revenue</p>
+                            <p id="totalRevenue" class="text-2xl font-semibold text-gray-900">$0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-blue-100">
+                            <i class="fas fa-chart-line text-blue-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Commission</p>
+                            <p id="totalCommission" class="text-2xl font-semibold text-gray-900">$0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-yellow-100">
+                            <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Last Updated</p>
+                            <p id="lastUpdated" class="text-sm font-semibold text-gray-900">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Time-based Statistics -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Rental Statistics</h3>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="p-3 rounded-full bg-red-100 mx-auto w-16 h-16 flex items-center justify-center mb-3">
+                            <i class="fas fa-calendar-day text-red-600 text-xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-600">Yesterday</p>
+                        <p id="yesterdayBookings" class="text-2xl font-semibold text-gray-900">-</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="p-3 rounded-full bg-orange-100 mx-auto w-16 h-16 flex items-center justify-center mb-3">
+                            <i class="fas fa-calendar-week text-orange-600 text-xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-600">Last Week</p>
+                        <p id="lastWeekBookings" class="text-2xl font-semibold text-gray-900">-</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="p-3 rounded-full bg-purple-100 mx-auto w-16 h-16 flex items-center justify-center mb-3">
+                            <i class="fas fa-calendar-alt text-purple-600 text-xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-600">Last Month</p>
+                        <p id="lastMonthBookings" class="text-2xl font-semibold text-gray-900">-</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="p-3 rounded-full bg-indigo-100 mx-auto w-16 h-16 flex items-center justify-center mb-3">
+                            <i class="fas fa-calendar-check text-indigo-600 text-xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-600">Year to Date</p>
+                        <p id="ytdBookings" class="text-2xl font-semibold text-gray-900">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prepaid vs Non-Prepaid Statistics -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Payment Statistics</h3>
+                
+                <!-- Prepaid Row -->
+                <div class="flex items-center justify-between p-4 bg-green-50 rounded-lg mb-4">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-green-100 mr-4">
+                            <i class="fas fa-credit-card text-green-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-lg font-semibold text-gray-900">Prepaid Bookings</p>
+                            <p class="text-sm text-gray-600">Fully paid in advance</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p id="prepaidBookings" class="text-2xl font-bold text-gray-900">-</p>
+                        <p id="prepaidRevenue" class="text-sm text-gray-500">$0</p>
+                    </div>
+                </div>
+                
+                <!-- Non-Prepaid Row -->
+                <div class="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-blue-100 mr-4">
+                            <i class="fas fa-money-bill-wave text-blue-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-lg font-semibold text-gray-900">Non-Prepaid Bookings</p>
+                            <p class="text-sm text-gray-600">Payment at pickup</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p id="nonPrepaidBookings" class="text-2xl font-bold text-gray-900">-</p>
+                        <p id="nonPrepaidRevenue" class="text-sm text-gray-500">$0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CPC Statistics -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">CPC Statistics</h3>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="p-3 rounded-full bg-yellow-100 mx-auto w-16 h-16 flex items-center justify-center mb-3">
+                            <i class="fas fa-calendar-day text-yellow-600 text-xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-600">Yesterday</p>
+                        <p id="yesterdayCpcBookings" class="text-2xl font-semibold text-gray-900">-</p>
+                        <p id="yesterdayCpcRevenue" class="text-sm text-gray-500">$0</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="p-3 rounded-full bg-orange-100 mx-auto w-16 h-16 flex items-center justify-center mb-3">
+                            <i class="fas fa-calendar-week text-orange-600 text-xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-600">Last Week</p>
+                        <p id="lastWeekCpcBookings" class="text-2xl font-semibold text-gray-900">-</p>
+                        <p id="lastWeekCpcRevenue" class="text-sm text-gray-500">$0</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="p-3 rounded-full bg-red-100 mx-auto w-16 h-16 flex items-center justify-center mb-3">
+                            <i class="fas fa-calendar-alt text-red-600 text-xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-600">Last Month</p>
+                        <p id="lastMonthCpcBookings" class="text-2xl font-semibold text-gray-900">-</p>
+                        <p id="lastMonthCpcRevenue" class="text-sm text-gray-500">$0</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="p-3 rounded-full bg-green-100 mx-auto w-16 h-16 flex items-center justify-center mb-3">
+                            <i class="fas fa-calendar-check text-green-600 text-xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-600">Year to Date</p>
+                        <p id="ytdCpcBookings" class="text-2xl font-semibold text-gray-900">-</p>
+                        <p id="ytdCpcRevenue" class="text-sm text-gray-500">$0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cancelled Reservations Statistics -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Cancelled Reservations</h3>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="p-3 rounded-full bg-red-100 mx-auto w-16 h-16 flex items-center justify-center mb-3">
+                            <i class="fas fa-times-circle text-red-600 text-xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-600">Yesterday</p>
+                        <p id="yesterdayCancelled" class="text-2xl font-semibold text-gray-900">-</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="p-3 rounded-full bg-orange-100 mx-auto w-16 h-16 flex items-center justify-center mb-3">
+                            <i class="fas fa-calendar-times text-orange-600 text-xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-600">Last Week</p>
+                        <p id="lastWeekCancelled" class="text-2xl font-semibold text-gray-900">-</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="p-3 rounded-full bg-purple-100 mx-auto w-16 h-16 flex items-center justify-center mb-3">
+                            <i class="fas fa-ban text-purple-600 text-xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-600">Last Month</p>
+                        <p id="lastMonthCancelled" class="text-2xl font-semibold text-gray-900">-</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="p-3 rounded-full bg-gray-100 mx-auto w-16 h-16 flex items-center justify-center mb-3">
+                            <i class="fas fa-calendar-minus text-gray-600 text-xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-600">Year to Date</p>
+                        <p id="ytdCancelled" class="text-2xl font-semibold text-gray-900">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Percentage Analysis -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Percentage Analysis</h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="p-3 rounded-full bg-red-100 mx-auto w-16 h-16 flex items-center justify-center mb-3">
+                            <i class="fas fa-percentage text-red-600 text-xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-600">Cancellation Rate</p>
+                        <p id="cancellationRate" class="text-2xl font-semibold text-gray-900">-</p>
+                        <p class="text-xs text-gray-500">of total bookings</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="p-3 rounded-full bg-green-100 mx-auto w-16 h-16 flex items-center justify-center mb-3">
+                            <i class="fas fa-credit-card text-green-600 text-xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-600">Prepaid Percentage</p>
+                        <p id="prepaidPercentage" class="text-2xl font-semibold text-gray-900">-</p>
+                        <p class="text-xs text-gray-500">of active bookings</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="p-3 rounded-full bg-blue-100 mx-auto w-16 h-16 flex items-center justify-center mb-3">
+                            <i class="fas fa-money-bill-wave text-blue-600 text-xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-600">Non-Prepaid Percentage</p>
+                        <p id="nonPrepaidPercentage" class="text-2xl font-semibold text-gray-900">-</p>
+                        <p class="text-xs text-gray-500">of active bookings</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                    <div class="space-y-3">
+                        <button class="w-full bg-primary hover:bg-primary/90 text-white py-2 px-4 rounded-md font-medium transition-colors">
+                            <i class="fas fa-plus mr-2"></i>New Booking
+                        </button>
+                        <button class="w-full border border-gray-300 text-gray-700 hover:bg-gray-50 py-2 px-4 rounded-md font-medium transition-colors">
+                            <i class="fas fa-download mr-2"></i>Download Report
+                        </button>
+                        <button class="w-full border border-gray-300 text-gray-700 hover:bg-gray-50 py-2 px-4 rounded-md font-medium transition-colors">
+                            <i class="fas fa-cog mr-2"></i>Account Settings
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+                    <div class="space-y-3">
+                        <div class="text-sm text-gray-600">
+                            <p>No recent activity</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Account Status</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">Email Verified</span>
+                            <span id="emailStatus" class="text-sm font-medium"></span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">Member Since</span>
+                            <span id="memberSince" class="text-sm font-medium"></span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">Last Login</span>
+                            <span id="lastLogin" class="text-sm font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Partner Information -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Partner Information</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-medium text-gray-900 mb-2">Personal Details</h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Name:</span>
+                                <span id="userName" class="font-medium"></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Email:</span>
+                                <span id="userEmail" class="font-medium"></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Phone:</span>
+                                <span id="userPhone" class="font-medium">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Company:</span>
+                                <span id="userCompany" class="font-medium">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-gray-900 mb-2">Account Actions</h4>
+                        <div class="space-y-2">
+                            <button class="w-full text-left text-sm text-primary hover:underline">
+                                <i class="fas fa-edit mr-2"></i>Edit Profile
+                            </button>
+                            <button class="w-full text-left text-sm text-primary hover:underline">
+                                <i class="fas fa-key mr-2"></i>Change Password
+                            </button>
+                            <button class="w-full text-left text-sm text-primary hover:underline">
+                                <i class="fas fa-bell mr-2"></i>Notification Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-6">
+                <div>
+                    <div class="flex items-center mb-3">
+                        <img src="public/images/zimple-logo.png" alt="Zimple Travel Group" class="h-8 w-auto brightness-0 invert">
+                    </div>
+                    <p class="text-gray-400 text-sm">Your trusted partner for global car rental solutions.</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-3 text-base">Services</h3>
+                    <ul class="space-y-1 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Car Rental Booking</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Partner Network</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">API Integration</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">24/7 Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-3 text-base">Company</h3>
+                    <ul class="space-y-1 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Press</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-3 text-base">Legal</h3>
+                    <ul class="space-y-1 text-gray-400 text-sm">
+                        <li><a href="privacy-policy.html" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Cookie Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">GDPR</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-4 pt-4 text-center text-gray-400">
+                <p class="text-sm">&copy; 2024 Zimple Travel Group. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Check if user is authenticated
+        fetch('auth/check_session.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.authenticated) {
+                    // User is logged in, populate dashboard
+                    const user = data.user;
+                    document.getElementById('userGreeting').textContent = `Welcome, ${user.first_name}!`;
+                    document.getElementById('userName').textContent = `${user.first_name} ${user.last_name}`;
+                    document.getElementById('userEmail').textContent = user.email;
+                    document.getElementById('emailStatus').textContent = user.email_verified ? 'Verified' : 'Not Verified';
+                    document.getElementById('emailStatus').className = user.email_verified ? 'text-sm font-medium text-green-600' : 'text-sm font-medium text-red-600';
+                    document.getElementById('memberSince').textContent = 'Today';
+                    document.getElementById('lastLogin').textContent = 'Just now';
+                } else {
+                    // User is not logged in, redirect to login
+                    window.location.href = 'login.html';
+                }
+            })
+            .catch(error => {
+                console.error('Error checking session:', error);
+                window.location.href = 'login.html';
+            });
+
+        // Fetch and display booking statistics
+        async function loadBookingStats() {
+            try {
+                const response = await fetch('dashboard/api/booking_stats.php');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const stats = data.data;
+                    
+                    // Update main stats cards
+                    document.getElementById('totalBookings').textContent = stats.total_bookings.toLocaleString();
+                    document.getElementById('totalRevenue').textContent = '$' + stats.total_revenue.toLocaleString();
+                    document.getElementById('totalCommission').textContent = '$' + stats.total_commission.toLocaleString();
+                    document.getElementById('lastUpdated').textContent = new Date(stats.last_updated).toLocaleString();
+                    
+                    // Update time-based statistics
+                    document.getElementById('yesterdayBookings').textContent = stats.yesterday_bookings.toLocaleString();
+                    document.getElementById('lastWeekBookings').textContent = stats.last_week_bookings.toLocaleString();
+                    document.getElementById('lastMonthBookings').textContent = stats.last_month_bookings.toLocaleString();
+                    document.getElementById('ytdBookings').textContent = stats.ytd_bookings.toLocaleString();
+                    
+                    // Update prepaid statistics
+                    if (stats.prepaid_stats) {
+                        const prepaid = stats.prepaid_stats['Yes'] || { count: 0, revenue: 0 };
+                        const nonPrepaid = stats.prepaid_stats['No'] || { count: 0, revenue: 0 };
+                        
+                        document.getElementById('prepaidBookings').textContent = prepaid.count.toLocaleString();
+                        document.getElementById('prepaidRevenue').textContent = '$' + prepaid.revenue.toLocaleString();
+                        document.getElementById('nonPrepaidBookings').textContent = nonPrepaid.count.toLocaleString();
+                        document.getElementById('nonPrepaidRevenue').textContent = '$' + nonPrepaid.revenue.toLocaleString();
+                    }
+                    
+                    // Update cancelled statistics
+                    document.getElementById('yesterdayCancelled').textContent = stats.yesterday_cancelled.toLocaleString();
+                    document.getElementById('lastWeekCancelled').textContent = stats.last_week_cancelled.toLocaleString();
+                    document.getElementById('lastMonthCancelled').textContent = stats.last_month_cancelled.toLocaleString();
+                    document.getElementById('ytdCancelled').textContent = stats.ytd_cancelled.toLocaleString();
+                    
+                    // Update CPC statistics
+                    if (stats.cpc_stats) {
+                        document.getElementById('yesterdayCpcBookings').textContent = stats.cpc_stats.yesterday_bookings.toLocaleString();
+                        document.getElementById('yesterdayCpcRevenue').textContent = '$' + stats.cpc_stats.yesterday_revenue.toLocaleString();
+                        document.getElementById('lastWeekCpcBookings').textContent = stats.cpc_stats.last_week_bookings.toLocaleString();
+                        document.getElementById('lastWeekCpcRevenue').textContent = '$' + stats.cpc_stats.last_week_revenue.toLocaleString();
+                        document.getElementById('lastMonthCpcBookings').textContent = stats.cpc_stats.last_month_bookings.toLocaleString();
+                        document.getElementById('lastMonthCpcRevenue').textContent = '$' + stats.cpc_stats.last_month_revenue.toLocaleString();
+                        document.getElementById('ytdCpcBookings').textContent = stats.cpc_stats.ytd_bookings.toLocaleString();
+                        document.getElementById('ytdCpcRevenue').textContent = '$' + stats.cpc_stats.ytd_revenue.toLocaleString();
+                    }
+                    
+                    // Update percentage statistics
+                    if (stats.percentages) {
+                        document.getElementById('cancellationRate').textContent = stats.percentages.cancellation_rate + '%';
+                        document.getElementById('prepaidPercentage').textContent = stats.percentages.prepaid_percentage + '%';
+                        document.getElementById('nonPrepaidPercentage').textContent = stats.percentages.non_prepaid_percentage + '%';
+                    }
+                } else {
+                    console.error('Failed to load booking stats:', data.error);
+                }
+            } catch (error) {
+                console.error('Error loading booking stats:', error);
+            }
+        }
+
+        // Load booking stats when page loads
+        loadBookingStats();
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            fetch('auth/logout.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = 'index.html';
+                }
+            })
+            .catch(error => {
+                console.error('Logout error:', error);
+                window.location.href = 'index.html';
+            });
+        });
+    </script>
+</body>
+</html>

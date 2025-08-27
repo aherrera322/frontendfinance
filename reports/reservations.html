@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Reservations - Reports</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script>
+		tailwind.config = { theme: { extend: { colors: { primary: '#117372' } } } }
+	</script>
+</head>
+<body class="min-h-screen bg-gray-50">
+	<nav class="border-b border-primary/20 bg-primary sticky top-0 z-50 shadow">
+		<div class="max-w-7xl mx-auto px-4">
+			<div class="h-14 flex items-center justify-between text-white">
+				<a href="../index.html" class="font-semibold">Zimple Reports</a>
+				<div class="space-x-4 text-sm">
+					<a href="./index.html" class="hover:text-yellow-200">Reports Home</a>
+					<a href="./reservations.html" class="text-yellow-200">Reservations</a>
+					<a href="./import_xlsx.php" class="hover:text-yellow-200">Import XLSX</a>
+					<a href="./import_csv.php" class="hover:text-yellow-200">Import CSV</a>
+					<a href="../admin/clients/index.html" class="hover:text-yellow-200">Admin Clients</a>
+					<a href="../admin/partners/index.html" class="hover:text-yellow-200">Admin Partners</a>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<section class="max-w-7xl mx-auto px-4 py-6">
+		<div class="mb-4 flex items-center gap-2">
+			<input id="q" placeholder="Search all columns" class="border rounded px-3 py-2 w-full">
+			<button id="searchBtn" class="border px-3 py-2 rounded">Search</button>
+		</div>
+
+		<div class="bg-white rounded shadow overflow-auto">
+			<table class="min-w-full text-xs" id="table"></table>
+		</div>
+		<div id="pagination" class="flex justify-between items-center mt-3 text-sm"></div>
+	</section>
+
+	<script>
+		// Guard page: redirect to login if session is not valid
+		(async function(){
+			try {
+				const res = await fetch('../auth/check_session.php', { credentials: 'include' });
+				const json = await res.json();
+				if (!json.authenticated) { location.href='../login.html'; }
+			} catch (e) { location.href='../login.html'; }
+		})();
+
+		const api = './reservations_api.php';
+		let page = 1;
+		let pageSize = 25;
+
+		function el(id){ return document.getElementById(id); }
+
+		async function load(){
+			const url = new URL(api, location.href);
+			url.searchParams.set('page', page);
+			url.searchParams.set('page_size', pageSize);
+			const q = el('q').value.trim();
+			if (q) url.searchParams.set('q', q);
+			const res = await fetch(url, { credentials: 'include' });
+			const json = await res.json();
+			const table = el('table');
+			const cols = json.columns || [];
+			const rows = json.rows || [];
+			table.innerHTML = '';
+			if (cols.length === 0) {
+				table.innerHTML = '<thead><tr><th class="p-2 text-left">No data</th></tr></thead>';
+				el('pagination').innerHTML = '';
+				return;
+			}
+			const thead = document.createElement('thead');
+			thead.className = 'bg-gray-100';
+			const headRow = document.createElement('tr');
+			cols.forEach(c=>{
+				const th = document.createElement('th');
+				th.className = 'p-2 text-left whitespace-nowrap';
+				th.textContent = c;
+				headRow.appendChild(th);
+			});
+			thead.appendChild(headRow);
+			table.appendChild(thead);
+
+			const tbody = document.createElement('tbody');
+			rows.forEach(r=>{
+				const tr = document.createElement('tr');
+				cols.forEach(c=>{
+					const td = document.createElement('td');
+					td.className = 'p-2 border-t whitespace-nowrap';
+					td.textContent = (r[c] ?? '').toString();
+					tr.appendChild(td);
+				});
+				tbody.appendChild(tr);
+			});
+			table.appendChild(tbody);
+
+			const p = json.pagination || { page:1, page_size:25, total: rows.length };
+			el('pagination').innerHTML = `
+				<div>Total: ${p.total.toLocaleString()}</div>
+				<div class="space-x-2">
+					<button ${p.page<=1?'disabled class="opacity-50 border px-2 py-1 rounded"':'class="border px-2 py-1 rounded"'} id="prev">Prev</button>
+					<span>Page ${p.page}</span>
+					<button ${(p.page*p.page_size)>=p.total?'disabled class="opacity-50 border px-2 py-1 rounded"':'class="border px-2 py-1 rounded"'} id="next">Next</button>
+				</div>`;
+			el('prev')?.addEventListener('click', ()=>{ page=Math.max(1,page-1); load(); });
+			el('next')?.addEventListener('click', ()=>{ page=page+1; load(); });
+		}
+
+		el('searchBtn').addEventListener('click', ()=>{ page=1; load(); });
+		el('q').addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ page=1; load(); }});
+
+		load();
+	</script>
+</body>
+</html>
+
+
+
+

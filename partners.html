@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partners - Zimple Travel Group</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#117372'
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-200">
+    <!-- Navigation -->
+    <nav class="border-b border-primary/20 bg-primary sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="index.html">
+                            <img src="public/images/zimple-logo.png" alt="Zimple Travel Group" class="h-10 w-auto brightness-0 invert">
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="index.html#services" class="text-white hover:text-yellow-200 px-3 py-2 text-sm font-medium transition-colors">Services</a>
+                        <a href="partners.html" class="text-yellow-200 px-3 py-2 text-sm font-medium">Partners</a>
+                        <a href="index.html#benefits" class="text-white hover:text-yellow-200 px-3 py-2 text-sm font-medium transition-colors">Benefits</a>
+                        <a href="index.html#contact" class="text-white hover:text-yellow-200 px-3 py-2 text-sm font-medium transition-colors">Contact</a>
+                        <a href="reports/index.html" class="text-white hover:text-yellow-200 px-3 py-2 text-sm font-medium transition-colors">Reports</a>
+                        <a href="dashboard_booking.php" class="text-white hover:text-yellow-200 px-3 py-2 text-sm font-medium transition-colors">Booking Dashboard</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="reports/index.html" class="text-white hover:text-yellow-200 px-3 py-2 text-sm font-medium transition-colors">Reports</a>
+                    <a href="dashboard_booking.php" class="text-white hover:text-yellow-200 px-3 py-2 text-sm font-medium transition-colors">Booking Dashboard</a>
+                    <a href="login.html" class="border border-white text-white hover:bg-white hover:text-primary bg-transparent px-4 py-2 rounded-md text-sm font-medium transition-colors">Login</a>
+                    <a href="register.html" class="bg-white text-primary hover:bg-gray-100 px-4 py-2 rounded-md text-sm font-medium transition-colors">Apply Now</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative bg-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-8 items-center">
+                <div>
+                    <span class="inline-block mb-3 bg-primary/10 text-primary border border-primary/20 text-sm px-3 py-1 rounded-full">Travel Industry Partnerships</span>
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 leading-tight">
+                        Partner with <span class="text-primary">Travel Industry</span> Leaders
+                    </h1>
+                    <p class="text-lg text-gray-600 mb-5 leading-relaxed max-w-xl">
+                        Join our exclusive network of travel wholesalers, agencies, airlines, hotels, and associations. Expand
+                        your car rental offerings and increase revenue with our comprehensive platform.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-3 mb-6">
+                        <button class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-md text-base font-medium transition-colors flex items-center">
+                            Become a Partner
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                        <button class="border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 rounded-md text-base font-medium transition-colors bg-transparent">
+                            Download Partnership Guide
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-primary">500+</div>
+                            <div class="text-sm text-gray-600">Active Partners</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-primary">$50M+</div>
+                            <div class="text-sm text-gray-600">Partner Revenue</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="relative z-10">
+                        <img src="public/placeholder.svg" alt="Travel industry partnership" class="rounded-xl shadow-2xl w-full">
+                    </div>
+                    <div class="absolute -top-4 -right-4 w-64 h-64 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl opacity-60 animate-pulse"></div>
+                    <div class="absolute -bottom-8 -left-4 w-64 h-64 bg-primary/20 rounded-full mix-blend-multiply filter blur-xl opacity-60 animate-pulse"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partner Types Section -->
+    <section class="py-8 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Partnership Opportunities</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    We work with various types of travel industry partners to create mutually beneficial relationships
+                </p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div class="border-0 shadow-lg hover:shadow-xl transition-all duration-300 p-5 bg-white hover:bg-gray-50 group rounded-lg">
+                    <div class="pb-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-building text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-1">Travel Wholesalers</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            Expand your product portfolio with our comprehensive car rental inventory and competitive wholesale
+                            rates.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="border-0 shadow-lg hover:shadow-xl transition-all duration-300 p-5 bg-white hover:bg-gray-50 group rounded-lg">
+                    <div class="pb-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-map-marker-alt text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-1">Travel Agencies</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            Offer your clients seamless car rental booking with our white-label solutions and dedicated support.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="border-0 shadow-lg hover:shadow-xl transition-all duration-300 p-5 bg-white hover:bg-gray-50 group rounded-lg">
+                    <div class="pb-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-plane text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-1">Airlines</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            Enhance passenger experience with integrated car rental options and earn additional ancillary revenue.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="border-0 shadow-lg hover:shadow-xl transition-all duration-300 p-5 bg-white hover:bg-gray-50 group rounded-lg">
+                    <div class="pb-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-building text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-1">Hotel Companies</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            Provide guests with convenient ground transportation options and generate additional revenue streams.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="border-0 shadow-lg hover:shadow-xl transition-all duration-300 p-5 bg-white hover:bg-gray-50 group rounded-lg">
+                    <div class="pb-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-users text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-1">Travel Associations</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            Offer exclusive member benefits and negotiated rates through our association partnership program.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="border-0 shadow-lg hover:shadow-xl transition-all duration-300 p-5 bg-white hover:bg-gray-50 group rounded-lg">
+                    <div class="pb-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-handshake text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-1">Strategic Partners</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            Custom partnership solutions for unique business models and specialized travel industry needs.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partnership Benefits -->
+    <section class="py-8 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Partnership Benefits</h2>
+                <p class="text-lg text-gray-600">
+                    Comprehensive support and benefits designed for travel industry success
+                </p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div class="border-0 shadow-md hover:shadow-lg transition-shadow p-4 bg-gray-50 rounded-lg">
+                    <div class="text-center">
+                        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-chart-line text-primary text-lg"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Revenue Growth</h3>
+                        <p class="text-sm text-gray-600">
+                            Average 25% increase in ancillary revenue within first year
+                        </p>
+                    </div>
+                </div>
+
+                <div class="border-0 shadow-md hover:shadow-lg transition-shadow p-4 bg-gray-50 rounded-lg">
+                    <div class="text-center">
+                        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-shield-alt text-primary text-lg"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Risk-Free</h3>
+                        <p class="text-sm text-gray-600">
+                            No setup fees, no monthly minimums, pay only for successful bookings
+                        </p>
+                    </div>
+                </div>
+
+                <div class="border-0 shadow-md hover:shadow-lg transition-shadow p-4 bg-gray-50 rounded-lg">
+                    <div class="text-center">
+                        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-globe text-primary text-lg"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Global Reach</h3>
+                        <p class="text-sm text-gray-600">
+                            Access to inventory in 100+ countries with local support
+                        </p>
+                    </div>
+                </div>
+
+                <div class="border-0 shadow-md hover:shadow-lg transition-shadow p-4 bg-gray-50 rounded-lg">
+                    <div class="text-center">
+                        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-users text-primary text-lg"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Dedicated Support</h3>
+                        <p class="text-sm text-gray-600">
+                            Personal account manager and 24/7 technical support
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partnership Tiers -->
+    <section class="py-8 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Partnership Tiers</h2>
+                <p class="text-lg text-gray-600">Choose the partnership level that best fits your business needs</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="border-0 shadow-lg bg-white p-6 rounded-lg">
+                    <div class="text-center pb-4">
+                        <span class="inline-block mx-auto mb-3 bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">Essential</span>
+                        <h3 class="text-2xl font-bold text-gray-900">Basic Partner</h3>
+                        <p class="text-gray-600">Perfect for getting started</p>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>API access to car rental inventory</span>
+                        </div>
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Standard commission rates</span>
+                        </div>
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Email support</span>
+                        </div>
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Basic reporting dashboard</span>
+                        </div>
+                        <div class="pt-4">
+                            <button class="w-full bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md font-medium transition-colors">Apply Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-2 border-primary shadow-xl bg-white p-6 rounded-lg relative">
+                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                        <span class="bg-primary text-white px-3 py-1 rounded-full text-sm">Most Popular</span>
+                    </div>
+                    <div class="text-center pb-4">
+                        <span class="inline-block mx-auto mb-3 bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">Professional</span>
+                        <h3 class="text-2xl font-bold text-gray-900">Premium Partner</h3>
+                        <p class="text-gray-600">For established travel businesses</p>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Everything in Basic Partner</span>
+                        </div>
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Enhanced commission rates</span>
+                        </div>
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Priority phone support</span>
+                        </div>
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>White-label booking engine</span>
+                        </div>
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Advanced analytics</span>
+                        </div>
+                        <div class="pt-4">
+                            <button class="w-full bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-md font-medium transition-colors">Apply Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-0 shadow-lg bg-white p-6 rounded-lg">
+                    <div class="text-center pb-4">
+                        <span class="inline-block mx-auto mb-3 bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">Enterprise</span>
+                        <h3 class="text-2xl font-bold text-gray-900">Strategic Partner</h3>
+                        <p class="text-gray-600">For large-scale operations</p>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Everything in Premium Partner</span>
+                        </div>
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Maximum commission rates</span>
+                        </div>
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Dedicated account manager</span>
+                        </div>
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Custom integration support</span>
+                        </div>
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Co-marketing opportunities</span>
+                        </div>
+                        <div class="pt-4">
+                            <button class="w-full bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-md font-medium transition-colors">Contact Sales</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-8 bg-gradient-to-r from-primary to-primary/80">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-2xl lg:text-3xl font-bold text-white mb-3">Ready to Partner with Us?</h2>
+            <p class="text-lg text-white/90 mb-5">
+                Join hundreds of travel industry leaders who trust Zimple Travel Group for their car rental needs.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button class="bg-white text-primary hover:bg-gray-100 px-6 py-3 rounded-md text-base font-medium transition-colors flex items-center justify-center">
+                    <i class="fas fa-handshake mr-2"></i>
+                    Apply for Partnership
+                </button>
+                <button class="border border-white text-white hover:bg-white/10 px-6 py-3 rounded-md text-base font-medium transition-colors bg-transparent">
+                    Schedule Consultation
+                </button>
+            </div>
+            <div class="mt-5 text-white/80">
+                <p class="text-sm">
+                    Questions about partnerships? Contact us at
+                    <a href="mailto:partnerships@zimpletravel.com" class="text-yellow-200 hover:underline">partnerships@zimpletravel.com</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-6">
+                <div>
+                    <div class="flex items-center mb-3">
+                        <img src="public/images/zimple-logo.png" alt="Zimple Travel Group" class="h-8 w-auto brightness-0 invert">
+                    </div>
+                    <p class="text-gray-400 text-sm">Your trusted partner for global car rental solutions.</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-3 text-base">Partnership</h3>
+                    <ul class="space-y-1 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Become a Partner</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Partnership Tiers</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">API Documentation</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Partner Portal</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-3 text-base">Support</h3>
+                    <ul class="space-y-1 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Help Center</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Technical Support</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Training Resources</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contact Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-3 text-base">Resources</h3>
+                    <ul class="space-y-1 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Partnership Guide</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Case Studies</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Marketing Materials</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Industry Reports</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-3 text-base">Legal</h3>
+                    <ul class="space-y-1 text-gray-400 text-sm">
+                        <li><a href="privacy-policy.html" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Cookie Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">GDPR</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-4 pt-4 text-center text-gray-400">
+                <p class="text-sm">&copy; 2024 Zimple Travel Group. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Clients Admin</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script>
+		tailwind.config = { theme: { extend: { colors: { primary: '#117372' } } } }
+	</script>
+</head>
+<body class="min-h-screen bg-gray-50">
+	<script>
+		// Guard page: redirect to login if session is not valid
+		(async function(){
+			try {
+				const res = await fetch('../../auth/check_session.php', { credentials: 'include' });
+				const json = await res.json();
+				if (!json.authenticated) { location.href='../../login.html'; }
+			} catch (e) { location.href='../../login.html'; }
+		})();
+	</script>
+	<nav class="border-b border-primary/20 bg-primary sticky top-0 z-50 shadow">
+		<div class="max-w-6xl mx-auto px-4">
+			<div class="h-14 flex items-center justify-between text-white">
+				<a href="/" class="font-semibold">Zimple Admin</a>
+				<div class="space-x-4 text-sm">
+					<a href="../../reports/index.html" class="hover:text-yellow-200">Reports</a>
+					<a href="./index.html" class="text-yellow-200">Clients</a>
+					<a href="../partners/index.html" class="hover:text-yellow-200">Partners</a>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<section class="max-w-6xl mx-auto px-4 py-6">
+		<div class="flex items-center justify-between mb-4">
+			<h1 class="text-2xl font-semibold">Clients</h1>
+			<button id="openCreate" class="bg-primary text-white px-3 py-2 rounded">Add Client</button>
+		</div>
+
+		<div class="flex items-center gap-2 mb-4">
+			<input id="search" type="text" placeholder="Search by name, email, contact" class="border rounded px-3 py-2 w-full">
+			<button id="doSearch" class="border px-3 py-2 rounded">Search</button>
+		</div>
+
+		<div class="bg-white rounded shadow">
+			<table class="w-full text-sm">
+				<thead class="bg-gray-100">
+					<tr>
+						<th class="text-left p-2">Name</th>
+						<th class="text-left p-2">Contact</th>
+						<th class="text-left p-2">Email</th>
+						<th class="text-left p-2">Phone</th>
+						<th class="text-left p-2">CC %</th>
+						<th class="text-left p-2">Credit Limit %</th>
+						<th class="text-left p-2">Status</th>
+						<th class="text-right p-2">Actions</th>
+					</tr>
+				</thead>
+				<tbody id="rows"></tbody>
+			</table>
+		</div>
+
+		<div id="pagination" class="flex justify-between items-center mt-3 text-sm"></div>
+	</section>
+
+	<!-- Modal -->
+	<div id="modal" class="fixed inset-0 hidden items-center justify-center bg-black/40">
+		<div class="bg-white rounded shadow w-full max-w-xl">
+			<div class="p-3 border-b flex items-center justify-between">
+				<h2 id="modalTitle" class="font-semibold">Create Client</h2>
+				<button id="closeModal" class="text-gray-500">✕</button>
+			</div>
+			<div class="p-4 grid grid-cols-2 gap-3 text-sm">
+				<label class="col-span-2">
+					<span class="block mb-1">Name</span>
+					<input id="f_name" class="border rounded px-2 py-1 w-full">
+				</label>
+				<label>
+					<span class="block mb-1">Contact Name</span>
+					<input id="f_contact_name" class="border rounded px-2 py-1 w-full">
+				</label>
+				<label>
+					<span class="block mb-1">Email</span>
+					<input id="f_email" class="border rounded px-2 py-1 w-full">
+				</label>
+				<label>
+					<span class="block mb-1">Phone</span>
+					<input id="f_phone" class="border rounded px-2 py-1 w-full">
+				</label>
+				<label>
+					<span class="block mb-1">Commission % (Credit Card)</span>
+					<input id="f_cc" type="number" min="0" max="100" step="0.01" class="border rounded px-2 py-1 w-full">
+				</label>
+				<label>
+					<span class="block mb-1">Commission % (Credit Limit)</span>
+					<input id="f_cl" type="number" min="0" max="100" step="0.01" class="border rounded px-2 py-1 w-full">
+				</label>
+				<label class="col-span-2">
+					<span class="block mb-1">Address Line 1</span>
+					<input id="f_address1" class="border rounded px-2 py-1 w-full">
+				</label>
+				<label class="col-span-2">
+					<span class="block mb-1">Address Line 2</span>
+					<input id="f_address2" class="border rounded px-2 py-1 w-full">
+				</label>
+				<label>
+					<span class="block mb-1">City</span>
+					<input id="f_city" class="border rounded px-2 py-1 w-full">
+				</label>
+				<label>
+					<span class="block mb-1">State</span>
+					<input id="f_state" class="border rounded px-2 py-1 w-full">
+				</label>
+				<label>
+					<span class="block mb-1">Postal Code</span>
+					<input id="f_postal" class="border rounded px-2 py-1 w-full">
+				</label>
+				<label>
+					<span class="block mb-1">Country</span>
+					<input id="f_country" class="border rounded px-2 py-1 w-full">
+				</label>
+				<label>
+					<span class="block mb-1">Status</span>
+					<select id="f_status" class="border rounded px-2 py-1 w-full">
+						<option value="active">active</option>
+						<option value="inactive">inactive</option>
+					</select>
+				</label>
+			</div>
+			<div class="p-3 border-t flex justify-end gap-2">
+				<button id="save" class="bg-primary text-white px-3 py-2 rounded">Save</button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		const apiBase = './api.php';
+		let editId = null;
+
+		function qs(id){ return document.getElementById(id); }
+		function show(el){ el.classList.remove('hidden'); el.classList.add('flex'); }
+		function hide(el){ el.classList.add('hidden'); el.classList.remove('flex'); }
+
+		async function load(page=1){
+			const search = qs('search').value.trim();
+			const url = new URL(apiBase, location.href);
+			url.searchParams.set('page', page);
+			if (search) url.searchParams.set('search', search);
+			const res = await fetch(url);
+			const json = await res.json();
+			const tbody = qs('rows');
+			tbody.innerHTML = '';
+			json.data.forEach(r => {
+				const tr = document.createElement('tr');
+				tr.innerHTML = `
+					<td class="p-2">${r.name ?? ''}</td>
+					<td class="p-2">${r.contact_name ?? ''}</td>
+					<td class="p-2">${r.email ?? ''}</td>
+					<td class="p-2">${r.phone ?? ''}</td>
+					<td class="p-2">${Number(r.commission_percent_credit_card ?? 0).toFixed(2)}</td>
+					<td class="p-2">${Number(r.commission_percent_credit_limit ?? 0).toFixed(2)}</td>
+					<td class="p-2">${r.status}</td>
+					<td class="p-2 text-right">
+						<button class="text-blue-600" data-edit="${r.id}">Edit</button>
+						<button class="text-red-600 ml-2" data-del="${r.id}">Delete</button>
+					</td>`;
+				tbody.appendChild(tr);
+			});
+
+			const p = json.pagination;
+			qs('pagination').innerHTML = `
+				<div>Total: ${p.total}</div>
+				<div class="space-x-2">
+					<button ${p.page<=1?'disabled class="opacity-50 border px-2 py-1 rounded"':'class="border px-2 py-1 rounded"'} id="prev">Prev</button>
+					<span>Page ${p.page}</span>
+					<button ${(p.page*p.page_size)>=p.total?'disabled class="opacity-50 border px-2 py-1 rounded"':'class="border px-2 py-1 rounded"'} id="next">Next</button>
+				</div>`;
+
+			qs('prev')?.addEventListener('click', ()=> load(p.page-1));
+			qs('next')?.addEventListener('click', ()=> load(p.page+1));
+
+			document.querySelectorAll('[data-edit]').forEach(btn=>{
+				btn.addEventListener('click', async ()=>{
+					const id = btn.getAttribute('data-edit');
+					const res = await fetch(`${apiBase}?id=${id}`);
+					const {data} = await res.json();
+					editId = id;
+					qs('modalTitle').textContent = 'Edit Client';
+					qs('f_name').value = data.name ?? '';
+					qs('f_contact_name').value = data.contact_name ?? '';
+					qs('f_email').value = data.email ?? '';
+					qs('f_phone').value = data.phone ?? '';
+					qs('f_cc').value = Number(data.commission_percent_credit_card ?? 0).toFixed(2);
+					qs('f_cl').value = Number(data.commission_percent_credit_limit ?? 0).toFixed(2);
+					qs('f_address1').value = data.address_line1 ?? '';
+					qs('f_address2').value = data.address_line2 ?? '';
+					qs('f_city').value = data.city ?? '';
+					qs('f_state').value = data.state ?? '';
+					qs('f_postal').value = data.postal_code ?? '';
+					qs('f_country').value = data.country ?? '';
+					qs('f_status').value = data.status ?? 'active';
+					show(qs('modal'));
+				});
+			});
+
+			document.querySelectorAll('[data-del]').forEach(btn=>{
+				btn.addEventListener('click', async ()=>{
+					if (!confirm('Delete this client?')) return;
+					await fetch(apiBase, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({action:'delete', id: Number(btn.getAttribute('data-del'))})});
+					load();
+				});
+			});
+		}
+
+		qs('openCreate').addEventListener('click', ()=>{
+			editId = null;
+			qs('modalTitle').textContent = 'Create Client';
+			['f_name','f_contact_name','f_email','f_phone','f_cc','f_cl','f_address1','f_address2','f_city','f_state','f_postal','f_country'].forEach(id=> qs(id).value='');
+			qs('f_status').value = 'active';
+			show(qs('modal'));
+		});
+
+		qs('closeModal').addEventListener('click', ()=> hide(qs('modal')));
+		qs('doSearch').addEventListener('click', ()=> load());
+		qs('search').addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ load(); }});
+
+		qs('save').addEventListener('click', async ()=>{
+			const payload = {
+				action: editId ? 'update' : 'create',
+				id: editId ? Number(editId) : undefined,
+				name: qs('f_name').value.trim(),
+				contact_name: qs('f_contact_name').value.trim() || null,
+				email: qs('f_email').value.trim() || null,
+				phone: qs('f_phone').value.trim() || null,
+				commission_percent_credit_card: Number(qs('f_cc').value || 0),
+				commission_percent_credit_limit: Number(qs('f_cl').value || 0),
+				address_line1: qs('f_address1').value.trim() || null,
+				address_line2: qs('f_address2').value.trim() || null,
+				city: qs('f_city').value.trim() || null,
+				state: qs('f_state').value.trim() || null,
+				postal_code: qs('f_postal').value.trim() || null,
+				country: qs('f_country').value.trim() || null,
+				status: qs('f_status').value
+			};
+			await fetch(apiBase, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+			hide(qs('modal'));
+			load();
+		});
+
+		load();
+	</script>
+</body>
+</html>
+
+
