@@ -207,6 +207,39 @@ try {
         }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Sticky table headers */
+        .sticky-table-container {
+            max-height: 70vh;
+            overflow-y: auto;
+            overflow-x: auto;
+        }
+        
+        .sticky-table-container thead th {
+            position: sticky;
+            top: 0;
+            background-color: #f9fafb;
+            z-index: 10;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Ensure proper border rendering for sticky headers */
+        .sticky-table-container thead th:not(:last-child) {
+            border-right: 1px solid #e5e7eb;
+        }
+        
+        /* Add shadow effect for better visual separation */
+        .sticky-table-container thead::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 100%;
+            height: 2px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1), transparent);
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
     <div class="min-h-screen">
@@ -331,7 +364,7 @@ try {
                 </h3>
                 
                 <?php if (!empty($results)): ?>
-                    <div class="overflow-x-auto">
+                    <div class="sticky-table-container">
                         <table class="min-w-full divide-y divide-gray-200">
                                                          <thead class="bg-gray-50">
                                                                   <tr>
