@@ -80,9 +80,27 @@ try {
 		$where = '';
 		$params = [];
 		if ($search !== '') {
-			$where = "WHERE name LIKE ? OR email LIKE ? OR contact_name LIKE ?";
+			// Check if representative and account_manager columns exist for search
+			$checkRep = $pdo->prepare("SHOW COLUMNS FROM clients LIKE 'representative'");
+			$checkRep->execute();
+			$hasRepresentative = $checkRep->fetch();
+			
+			$checkAcc = $pdo->prepare("SHOW COLUMNS FROM clients LIKE 'account_manager'");
+			$checkAcc->execute();
+			$hasAccountManager = $checkAcc->fetch();
+			
 			$like = '%' . $search . '%';
 			$params = [$like, $like, $like];
+			
+			if ($hasRepresentative && $hasAccountManager) {
+				$where = "WHERE name LIKE ? OR email LIKE ? OR contact_name LIKE ? OR representative LIKE ? OR account_manager LIKE ?";
+				$params = [$like, $like, $like, $like, $like];
+			} elseif ($hasRepresentative) {
+				$where = "WHERE name LIKE ? OR email LIKE ? OR contact_name LIKE ? OR representative LIKE ?";
+				$params = [$like, $like, $like, $like];
+			} else {
+				$where = "WHERE name LIKE ? OR email LIKE ? OR contact_name LIKE ?";
+			}
 		}
 
 		$countSql = "SELECT COUNT(*) AS cnt FROM clients $where";
@@ -90,7 +108,7 @@ try {
 		$stmt->execute($params);
 		$total = (int)$stmt->fetch()['cnt'];
 
-		$sql = "SELECT * FROM clients $where ORDER BY created_at DESC LIMIT $pageSize OFFSET $offset";
+		$sql = "SELECT * FROM clients $where ORDER BY id DESC LIMIT $pageSize OFFSET $offset";
 		$stmt = $pdo->prepare($sql);
 		$stmt->execute($params);
 		$rows = $stmt->fetchAll();
@@ -117,24 +135,81 @@ try {
 			$cl = validateCommission($input['commission_percent_credit_limit'] ?? 0);
 			if ($cc === null || $cl === null) { respond(400, ['success' => false, 'message' => 'Commission percents must be numbers between 0 and 100']); }
 
-			$stmt = $pdo->prepare("INSERT INTO clients (
-				name, contact_name, email, phone, address_line1, address_line2, city, state, postal_code, country, commission_percent_credit_card, commission_percent_credit_limit, status
-			) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
-			$stmt->execute([
-				$name,
-				$input['contact_name'] ?? null,
-				$input['email'] ?? null,
-				$input['phone'] ?? null,
-				$input['address_line1'] ?? null,
-				$input['address_line2'] ?? null,
-				$input['city'] ?? null,
-				$input['state'] ?? null,
-				$input['postal_code'] ?? null,
-				$input['country'] ?? null,
-				$cc,
-				$cl,
-				(isset($input['status']) && in_array($input['status'], ['active','inactive'])) ? $input['status'] : 'active'
-			]);
+			// Check if representative column exists
+			$checkStmt = $pdo->prepare("SHOW COLUMNS FROM clients LIKE 'representative'");
+			$checkStmt->execute();
+			$hasRepresentative = $checkStmt->fetch();
+
+			// Check if account_manager column exists
+			$checkStmt2 = $pdo->prepare("SHOW COLUMNS FROM clients LIKE 'account_manager'");
+			$checkStmt2->execute();
+			$hasAccountManager = $checkStmt2->fetch();
+
+			if ($hasRepresentative && $hasAccountManager) {
+				// Include both representative and account_manager fields in insert
+				$stmt = $pdo->prepare("INSERT INTO clients (
+					name, contact_name, representative, account_manager, email, phone, address_line1, address_line2, city, state, postal_code, country, commission_percent_credit_card, commission_percent_credit_limit, status
+				) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+				$stmt->execute([
+					$name,
+					$input['contact_name'] ?? null,
+					$input['representative'] ?? null,
+					$input['account_manager'] ?? null,
+					$input['email'] ?? null,
+					$input['phone'] ?? null,
+					$input['address_line1'] ?? null,
+					$input['address_line2'] ?? null,
+					$input['city'] ?? null,
+					$input['state'] ?? null,
+					$input['postal_code'] ?? null,
+					$input['country'] ?? null,
+					$cc,
+					$cl,
+					(isset($input['status']) && in_array($input['status'], ['active','inactive'])) ? $input['status'] : 'active'
+				]);
+			} elseif ($hasRepresentative) {
+				// Include only representative field in insert
+				$stmt = $pdo->prepare("INSERT INTO clients (
+					name, contact_name, representative, email, phone, address_line1, address_line2, city, state, postal_code, country, commission_percent_credit_card, commission_percent_credit_limit, status
+				) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+				$stmt->execute([
+					$name,
+					$input['contact_name'] ?? null,
+					$input['representative'] ?? null,
+					$input['email'] ?? null,
+					$input['phone'] ?? null,
+					$input['address_line1'] ?? null,
+					$input['address_line2'] ?? null,
+					$input['city'] ?? null,
+					$input['state'] ?? null,
+					$input['postal_code'] ?? null,
+					$input['country'] ?? null,
+					$cc,
+					$cl,
+					(isset($input['status']) && in_array($input['status'], ['active','inactive'])) ? $input['status'] : 'active'
+				]);
+			} else {
+				// Insert without representative or account_manager fields
+				$stmt = $pdo->prepare("INSERT INTO clients (
+					name, contact_name, email, phone, address_line1, address_line2, city, state, postal_code, country, commission_percent_credit_card, commission_percent_credit_limit, status
+				) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+				$stmt->execute([
+					$name,
+					$input['contact_name'] ?? null,
+					$input['email'] ?? null,
+					$input['phone'] ?? null,
+					$input['address_line1'] ?? null,
+					$input['address_line2'] ?? null,
+					$input['city'] ?? null,
+					$input['state'] ?? null,
+					$input['postal_code'] ?? null,
+					$input['country'] ?? null,
+					$cc,
+					$cl,
+					(isset($input['status']) && in_array($input['status'], ['active','inactive'])) ? $input['status'] : 'active'
+				]);
+			}
+			
 			$id = (int)$pdo->lastInsertId();
 			$stmt = $pdo->prepare("SELECT * FROM clients WHERE id = ?");
 			$stmt->execute([$id]);
@@ -148,25 +223,84 @@ try {
 			$cl = validateCommission($input['commission_percent_credit_limit'] ?? 0);
 			if ($cc === null || $cl === null) { respond(400, ['success' => false, 'message' => 'Commission percents must be numbers between 0 and 100']); }
 
-			$stmt = $pdo->prepare("UPDATE clients SET
-				name = ?, contact_name = ?, email = ?, phone = ?, address_line1 = ?, address_line2 = ?, city = ?, state = ?, postal_code = ?, country = ?, commission_percent_credit_card = ?, commission_percent_credit_limit = ?, status = ?, updated_at = CURRENT_TIMESTAMP
-				WHERE id = ?");
-			$stmt->execute([
-				trim((string)($input['name'] ?? '')),
-				$input['contact_name'] ?? null,
-				$input['email'] ?? null,
-				$input['phone'] ?? null,
-				$input['address_line1'] ?? null,
-				$input['address_line2'] ?? null,
-				$input['city'] ?? null,
-				$input['state'] ?? null,
-				$input['postal_code'] ?? null,
-				$input['country'] ?? null,
-				$cc,
-				$cl,
-				(isset($input['status']) && in_array($input['status'], ['active','inactive'])) ? $input['status'] : 'active',
-				$id
-			]);
+			// Check if representative column exists
+			$checkStmt = $pdo->prepare("SHOW COLUMNS FROM clients LIKE 'representative'");
+			$checkStmt->execute();
+			$hasRepresentative = $checkStmt->fetch();
+
+			// Check if account_manager column exists
+			$checkStmt2 = $pdo->prepare("SHOW COLUMNS FROM clients LIKE 'account_manager'");
+			$checkStmt2->execute();
+			$hasAccountManager = $checkStmt2->fetch();
+
+			if ($hasRepresentative && $hasAccountManager) {
+				// Include both representative and account_manager fields in update
+				$stmt = $pdo->prepare("UPDATE clients SET
+					name = ?, contact_name = ?, representative = ?, account_manager = ?, email = ?, phone = ?, address_line1 = ?, address_line2 = ?, city = ?, state = ?, postal_code = ?, country = ?, commission_percent_credit_card = ?, commission_percent_credit_limit = ?, status = ?, updated_at = CURRENT_TIMESTAMP
+					WHERE id = ?");
+				$stmt->execute([
+					trim((string)($input['name'] ?? '')),
+					$input['contact_name'] ?? null,
+					$input['representative'] ?? null,
+					$input['account_manager'] ?? null,
+					$input['email'] ?? null,
+					$input['phone'] ?? null,
+					$input['address_line1'] ?? null,
+					$input['address_line2'] ?? null,
+					$input['city'] ?? null,
+					$input['state'] ?? null,
+					$input['postal_code'] ?? null,
+					$input['country'] ?? null,
+					$cc,
+					$cl,
+					(isset($input['status']) && in_array($input['status'], ['active','inactive'])) ? $input['status'] : 'active',
+					$id
+				]);
+			} elseif ($hasRepresentative) {
+				// Include only representative field in update
+				$stmt = $pdo->prepare("UPDATE clients SET
+					name = ?, contact_name = ?, representative = ?, email = ?, phone = ?, address_line1 = ?, address_line2 = ?, city = ?, state = ?, postal_code = ?, country = ?, commission_percent_credit_card = ?, commission_percent_credit_limit = ?, status = ?, updated_at = CURRENT_TIMESTAMP
+					WHERE id = ?");
+				$stmt->execute([
+					trim((string)($input['name'] ?? '')),
+					$input['contact_name'] ?? null,
+					$input['representative'] ?? null,
+					$input['email'] ?? null,
+					$input['phone'] ?? null,
+					$input['address_line1'] ?? null,
+					$input['address_line2'] ?? null,
+					$input['city'] ?? null,
+					$input['state'] ?? null,
+					$input['postal_code'] ?? null,
+					$input['country'] ?? null,
+					$cc,
+					$cl,
+					(isset($input['status']) && in_array($input['status'], ['active','inactive'])) ? $input['status'] : 'active',
+					$id
+				]);
+			} else {
+				// Update without representative or account_manager fields
+				$stmt = $pdo->prepare("UPDATE clients SET
+					name = ?, contact_name = ?, email = ?, phone = ?, address_line1 = ?, address_line2 = ?, city = ?, state = ?, postal_code = ?, country = ?, commission_percent_credit_card = ?, commission_percent_credit_limit = ?, status = ?, updated_at = CURRENT_TIMESTAMP
+					WHERE id = ?");
+				$stmt->execute([
+					trim((string)($input['name'] ?? '')),
+					$input['contact_name'] ?? null,
+					$input['email'] ?? null,
+					$input['phone'] ?? null,
+					$input['address_line1'] ?? null,
+					$input['address_line2'] ?? null,
+					$input['city'] ?? null,
+					$input['state'] ?? null,
+					$input['postal_code'] ?? null,
+					$input['country'] ?? null,
+					$cc,
+					$cl,
+					(isset($input['status']) && in_array($input['status'], ['active','inactive'])) ? $input['status'] : 'active',
+					$id
+				]);
+			}
+			
 			$stmt = $pdo->prepare("SELECT * FROM clients WHERE id = ?");
 			$stmt->execute([$id]);
 			respond(200, ['success' => true, 'data' => $stmt->fetch()]);

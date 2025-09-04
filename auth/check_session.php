@@ -27,7 +27,7 @@ try {
     }
     
     // Get database connection
-    $pdo = getDBConnection();
+    $pdo = getReservationsDB();
     if (!$pdo) {
         throw new Exception('Database connection failed');
     }
@@ -35,7 +35,7 @@ try {
     // Check if session is valid
     $stmt = $pdo->prepare("
         SELECT s.session_token, s.expires_at, s.is_active,
-               u.id, u.first_name, u.last_name, u.email, u.email_verified
+               u.id, u.first_name, u.last_name, u.email, u.email_verified, u.department
         FROM user_sessions s
         JOIN users u ON s.user_id = u.id
         WHERE s.session_token = ? 
@@ -65,7 +65,8 @@ try {
             'first_name' => $session['first_name'],
             'last_name' => $session['last_name'],
             'email' => $session['email'],
-            'email_verified' => $session['email_verified']
+            'email_verified' => $session['email_verified'],
+            'department' => $session['department']
         ],
         'session' => [
             'expires_at' => $session['expires_at']

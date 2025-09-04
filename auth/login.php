@@ -32,7 +32,7 @@ try {
     $ipAddress = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
     
     // Get database connection
-    $pdo = getDBConnection();
+    $pdo = getReservationsDB();
     if (!$pdo) {
         throw new Exception('Database connection failed');
     }
@@ -53,7 +53,7 @@ try {
     
     // Get user by email
     $stmt = $pdo->prepare("
-        SELECT id, first_name, last_name, email, password_hash, is_active, email_verified, last_login
+        SELECT id, first_name, last_name, email, password_hash, is_active, email_verified, last_login, department
         FROM users 
         WHERE email = ?
     ");
@@ -130,6 +130,7 @@ try {
             'first_name' => $user['first_name'],
             'last_name' => $user['last_name'],
             'email' => $user['email'],
+            'department' => $user['department'],
             'email_verified' => $user['email_verified']
         ],
         'session_token' => $sessionToken

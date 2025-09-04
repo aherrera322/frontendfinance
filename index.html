@@ -74,6 +74,7 @@
                                 <div class="border-t my-1"></div>
                                 <a href="admin/partners/index.html" id="navAdminPartnersItemSm" class="hidden block px-4 py-2 hover:bg-gray-100 text-sm">Admin Partners</a>
                                 <a href="admin/clients/index.html" id="navAdminClientsItemSm" class="hidden block px-4 py-2 hover:bg-gray-100 text-sm">Admin Clients</a>
+                                <a href="admin/users/index.html" id="navAdminUsersItemSm" class="hidden block px-4 py-2 hover:bg-gray-100 text-sm">Admin Users</a>
                             </div>
                         </div>
                         <span id="userGreeting" class="text-white text-sm"></span>
@@ -396,6 +397,7 @@
                     // Show admin menu items
                     document.getElementById('navAdminPartnersItemSm')?.classList.remove('hidden');
                     document.getElementById('navAdminClientsItemSm')?.classList.remove('hidden');
+                    document.getElementById('navAdminUsersItemSm')?.classList.remove('hidden');
                 } else {
                     // User is not logged in - show guest navigation
                     document.getElementById('loggedInNav').style.display = 'none';

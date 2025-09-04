@@ -96,6 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                         <a href="../reports/index.html" class="hover:text-yellow-200 transition-colors">Reports</a>
                         <a href="../admin/clients/index.html" class="hover:text-yellow-200 transition-colors">Clients</a>
                         <a href="../admin/partners/index.html" class="hover:text-yellow-200 transition-colors">Partners</a>
+                        <a href="../admin/users/index.html" class="hover:text-yellow-200 transition-colors">Users</a>
                     </nav>
                 </div>
             </div>

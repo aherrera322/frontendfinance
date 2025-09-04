@@ -50,6 +50,8 @@
 					<tr>
 						<th class="text-left p-2">Name</th>
 						<th class="text-left p-2">Contact</th>
+						<th class="text-left p-2">Representative</th>
+						<th class="text-left p-2">Account Manager</th>
 						<th class="text-left p-2">Email</th>
 						<th class="text-left p-2">Phone</th>
 						<th class="text-left p-2">CC %</th>
@@ -80,6 +82,14 @@
 				<label>
 					<span class="block mb-1">Contact Name</span>
 					<input id="f_contact_name" class="border rounded px-2 py-1 w-full">
+				</label>
+				<label>
+					<span class="block mb-1">Representative</span>
+					<input id="f_representative" class="border rounded px-2 py-1 w-full" placeholder="Parent/Representative name">
+				</label>
+				<label>
+					<span class="block mb-1">Account Manager</span>
+					<input id="f_account_manager" class="border rounded px-2 py-1 w-full" placeholder="Account Manager name">
 				</label>
 				<label>
 					<span class="block mb-1">Email</span>
@@ -157,6 +167,8 @@
 				tr.innerHTML = `
 					<td class="p-2">${r.name ?? ''}</td>
 					<td class="p-2">${r.contact_name ?? ''}</td>
+					<td class="p-2">${r.representative ?? ''}</td>
+					<td class="p-2">${r.account_manager ?? ''}</td>
 					<td class="p-2">${r.email ?? ''}</td>
 					<td class="p-2">${r.phone ?? ''}</td>
 					<td class="p-2">${Number(r.commission_percent_credit_card ?? 0).toFixed(2)}</td>
@@ -190,6 +202,8 @@
 					qs('modalTitle').textContent = 'Edit Client';
 					qs('f_name').value = data.name ?? '';
 					qs('f_contact_name').value = data.contact_name ?? '';
+					qs('f_representative').value = data.representative ?? '';
+					qs('f_account_manager').value = data.account_manager ?? '';
 					qs('f_email').value = data.email ?? '';
 					qs('f_phone').value = data.phone ?? '';
 					qs('f_cc').value = Number(data.commission_percent_credit_card ?? 0).toFixed(2);
@@ -217,7 +231,7 @@
 		qs('openCreate').addEventListener('click', ()=>{
 			editId = null;
 			qs('modalTitle').textContent = 'Create Client';
-			['f_name','f_contact_name','f_email','f_phone','f_cc','f_cl','f_address1','f_address2','f_city','f_state','f_postal','f_country'].forEach(id=> qs(id).value='');
+			['f_name','f_contact_name','f_representative','f_account_manager','f_email','f_phone','f_cc','f_cl','f_address1','f_address2','f_city','f_state','f_postal','f_country'].forEach(id=> qs(id).value='');
 			qs('f_status').value = 'active';
 			show(qs('modal'));
 		});
@@ -232,6 +246,8 @@
 				id: editId ? Number(editId) : undefined,
 				name: qs('f_name').value.trim(),
 				contact_name: qs('f_contact_name').value.trim() || null,
+				representative: qs('f_representative').value.trim() || null,
+				account_manager: qs('f_account_manager').value.trim() || null,
 				email: qs('f_email').value.trim() || null,
 				phone: qs('f_phone').value.trim() || null,
 				commission_percent_credit_card: Number(qs('f_cc').value || 0),

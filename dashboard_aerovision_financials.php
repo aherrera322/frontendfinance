@@ -24,6 +24,7 @@ $selectedMonth = $_GET['month'] ?? $currentMonth;
 $selectedYear = $_GET['year'] ?? $currentYear;
 $selectedDateColumn = $_GET['date_column'] ?? 'app_day'; // Default to app_day
 $selectedPrepay = $_GET['prepay'] ?? ''; // Default to empty (all)
+$selectedAgency = $_GET['agency'] ?? ''; // Default to empty (all agencies)
 
 // Get month name
 $monthNames = [
@@ -34,6 +35,18 @@ $monthNames = [
 
 // Get supplier comparison data
 try {
+    // Get all unique agencies from aero_res_22
+    $stmt = $reservationsPdo->prepare("
+        SELECT DISTINCT agency 
+        FROM aero_res_22 
+        WHERE agency IS NOT NULL 
+        AND agency != '' 
+        AND agency != 'N/A'
+        ORDER BY agency ASC
+    ");
+    $stmt->execute();
+    $agencies = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    
     // Get all unique suppliers from aero_res_22
     $stmt = $reservationsPdo->prepare("
         SELECT DISTINCT supplier 
@@ -49,12 +62,20 @@ try {
     $supplierData = [];
     
     foreach ($suppliers as $supplier) {
-        // Build prepay filter condition
+        // Build prepay and agency filter conditions
         $prepayCondition = '';
+        $agencyCondition = '';
         $prepayParams = [];
+        $agencyParams = [];
+        
         if (!empty($selectedPrepay)) {
             $prepayCondition = 'AND prepay = ?';
             $prepayParams = [$selectedPrepay];
+        }
+        
+        if (!empty($selectedAgency)) {
+            $agencyCondition = 'AND agency = ?';
+            $agencyParams = [$selectedAgency];
         }
         
         // Selected Month This Year
@@ -68,8 +89,9 @@ try {
             AND YEAR($selectedDateColumn) = ? 
             AND MONTH($selectedDateColumn) = ?
             $prepayCondition
+            $agencyCondition
         ");
-        $stmt->execute(array_merge([$supplier, $selectedYear, $selectedMonth], $prepayParams));
+        $stmt->execute(array_merge([$supplier, $selectedYear, $selectedMonth], $prepayParams, $agencyParams));
         $selectedMonthThisYear = $stmt->fetch(PDO::FETCH_ASSOC);
         
         // Selected Month Last Year
@@ -83,8 +105,9 @@ try {
             AND YEAR($selectedDateColumn) = ? 
             AND MONTH($selectedDateColumn) = ?
             $prepayCondition
+            $agencyCondition
         ");
-        $stmt->execute(array_merge([$supplier, $selectedYear - 1, $selectedMonth], $prepayParams));
+        $stmt->execute(array_merge([$supplier, $selectedYear - 1, $selectedMonth], $prepayParams, $agencyParams));
         $selectedMonthLastYear = $stmt->fetch(PDO::FETCH_ASSOC);
         
         // YTD This Year (through selected month)
@@ -98,8 +121,9 @@ try {
             AND YEAR($selectedDateColumn) = ?
             AND MONTH($selectedDateColumn) <= ?
             $prepayCondition
+            $agencyCondition
         ");
-        $stmt->execute(array_merge([$supplier, $selectedYear, $selectedMonth], $prepayParams));
+        $stmt->execute(array_merge([$supplier, $selectedYear, $selectedMonth], $prepayParams, $agencyParams));
         $ytdThisYear = $stmt->fetch(PDO::FETCH_ASSOC);
         
         // YTD Last Year (through selected month)
@@ -113,8 +137,9 @@ try {
             AND YEAR($selectedDateColumn) = ?
             AND MONTH($selectedDateColumn) <= ?
             $prepayCondition
+            $agencyCondition
         ");
-        $stmt->execute(array_merge([$supplier, $selectedYear - 1, $selectedMonth], $prepayParams));
+        $stmt->execute(array_merge([$supplier, $selectedYear - 1, $selectedMonth], $prepayParams, $agencyParams));
         $ytdLastYear = $stmt->fetch(PDO::FETCH_ASSOC);
         
         // Calculate percentage changes
@@ -325,6 +350,17 @@ try {
                              <option value="no" <?php echo $selectedPrepay == 'no' ? 'selected' : ''; ?>>No</option>
                          </select>
                      </div>
+                     <div>
+                         <label for="agency" class="block text-sm font-medium text-gray-700 mb-1">Agency</label>
+                         <select id="agency" name="agency" class="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                             <option value="" <?php echo $selectedAgency == '' ? 'selected' : ''; ?>>All Agencies</option>
+                             <?php foreach ($agencies as $agency): ?>
+                                 <option value="<?php echo htmlspecialchars($agency); ?>" <?php echo $selectedAgency == $agency ? 'selected' : ''; ?>>
+                                     <?php echo htmlspecialchars($agency); ?>
+                                 </option>
+                             <?php endforeach; ?>
+                         </select>
+                     </div>
                      <div class="flex gap-2">
                         <button type="submit" class="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 transition-colors">
                             Apply Filter
@@ -343,6 +379,9 @@ try {
                     <span class="text-sm font-normal text-gray-600">(Based on <?php echo ucfirst(str_replace('_', ' ', $selectedDateColumn)); ?>)</span>
                     <?php if (!empty($selectedPrepay)): ?>
                         <span class="text-sm font-normal text-gray-600">| Prepay: <?php echo ucfirst($selectedPrepay); ?></span>
+                    <?php endif; ?>
+                    <?php if (!empty($selectedAgency)): ?>
+                        <span class="text-sm font-normal text-gray-600">| Agency: <?php echo htmlspecialchars($selectedAgency); ?></span>
                     <?php endif; ?>
                 </h3>
                 
@@ -547,6 +586,9 @@ try {
                      <?php if (!empty($selectedPrepay)): ?>
                          <span class="text-sm font-normal text-gray-600">| Prepay: <?php echo ucfirst($selectedPrepay); ?></span>
                      <?php endif; ?>
+                     <?php if (!empty($selectedAgency)): ?>
+                         <span class="text-sm font-normal text-gray-600">| Agency: <?php echo htmlspecialchars($selectedAgency); ?></span>
+                     <?php endif; ?>
                  </h3>
                  
                  <?php if (!empty($netIncomeData)): ?>
@@ -663,6 +705,9 @@ try {
                     <span class="text-sm font-normal text-gray-600">(Based on <?php echo ucfirst(str_replace('_', ' ', $selectedDateColumn)); ?>)</span>
                     <?php if (!empty($selectedPrepay)): ?>
                         <span class="text-sm font-normal text-gray-600">| Prepay: <?php echo ucfirst($selectedPrepay); ?></span>
+                    <?php endif; ?>
+                    <?php if (!empty($selectedAgency)): ?>
+                        <span class="text-sm font-normal text-gray-600">| Agency: <?php echo htmlspecialchars($selectedAgency); ?></span>
                     <?php endif; ?>
                 </h3>
                 
@@ -866,6 +911,9 @@ try {
                      <span class="text-sm font-normal text-gray-600">(Based on <?php echo ucfirst(str_replace('_', ' ', $selectedDateColumn)); ?>)</span>
                      <?php if (!empty($selectedPrepay)): ?>
                          <span class="text-sm font-normal text-gray-600">| Prepay: <?php echo ucfirst($selectedPrepay); ?></span>
+                     <?php endif; ?>
+                     <?php if (!empty($selectedAgency)): ?>
+                         <span class="text-sm font-normal text-gray-600">| Agency: <?php echo htmlspecialchars($selectedAgency); ?></span>
                      <?php endif; ?>
                  </h3>
                  

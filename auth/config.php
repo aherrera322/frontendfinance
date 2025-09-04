@@ -83,6 +83,8 @@ function initializeDatabases() {
                 verification_token VARCHAR(255),
                 reset_token VARCHAR(255),
                 reset_token_expires DATETIME,
+                department ENUM('site_administrator', 'agent_aerovision', 'agent_zimple', 'accounting_aerovision', 'accounting_zimple', 'accounting_manager') DEFAULT 'agent_zimple',
+                permissions JSON,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 last_login DATETIME,
